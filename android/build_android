@@ -4,8 +4,7 @@ export USE_CCACHE=1
 source ~/.bashrc
 
 INIT=0
-USER=$(whoami)
-DIR="/home/$USER/android"
+DIR="$HOME/android"
 CM_VERSION="10.2"
 
 function header {
@@ -44,7 +43,7 @@ function configure_env {
 	unzip -q $SDK_ZIP
 	SDK=$(echo $SDK_ZIP | cut -d"." -f1)
 	export PATH=$PATH:$SDK/sdk/platform-tools:$SDK/sdk/tools:$DIR/bin
-	echo "export PATH=$PATH:$SDK/sdk/platform-tools:$SDK/sdk/tools:$DIR/bin" > ~/.bashrc
+	echo "export PATH=$PATH:$SDK/sdk/platform-tools:$SDK/sdk/tools:$DIR/bin" >> $HOME/.bashrc
 
 	header "Initializing CyanogenMod repository..."
 	cd $DIR/system
