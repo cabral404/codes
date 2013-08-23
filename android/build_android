@@ -43,8 +43,8 @@ function configure_env {
 	SDK_ZIP=$(echo ${SDK_URL##*/})
 	unzip -q $SDK_ZIP
 	SDK=$(echo $SDK_ZIP | cut -d"." -f1)
-	export PATH=$PATH:$SDK/sdk/platform-tools:$PATH:$SDK/sdk/tools:$DIR/bin
-	echo "export PATH=$PATH:$SDK/sdk/platform-tools:$PATH:$SDK/sdk/tools:$DIR/bin" > ~/.bashrc
+	export PATH=$PATH:$SDK/sdk/platform-tools:$SDK/sdk/tools:$DIR/bin
+	echo "export PATH=$PATH:$SDK/sdk/platform-tools:$SDK/sdk/tools:$DIR/bin" > ~/.bashrc
 
 	header "Initializing CyanogenMod repository..."
 	cd $DIR/system
