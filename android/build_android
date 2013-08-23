@@ -8,7 +8,7 @@ DIR="/home/$USER/android"
 CM_VERSION="10.2"
 
 function header {
-	echo "=================="
+	echo -e "\n=================="
 	echo "$*"
 	echo "=================="
 }
