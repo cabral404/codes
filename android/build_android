@@ -130,6 +130,7 @@ then
 	cd $DIR/system/
 	source build/envsetup.sh
 	breakfast maguro
+	croot
 	brunch maguro
 	header "Build finished"
 	exit 0
