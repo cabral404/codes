@@ -1,0 +1,122 @@
+#!/bin/bash
+
+export USE_CCACHE=1
+
+INIT=0
+USER=$(whoami)
+DIR="/home/$USER/android"
+CM_VERSION="10.2"
+
+header "Checking Linux distro..."
+DISTRO=$(cat /etc/issue)
+echo $DISTRO | grep -i debian > /dev/null
+if [ $? -ne 0 ]
+then
+	echo "Linux distro not supported!"
+	exit 1
+fi
+
+function header {
+	echo "=================="
+	echo "$*"
+	echo "=================="
+}
+
+function configure_env {
+	header "Creating directory structure..."
+	mkdir -v -p $DIR/system $DIR/gapps $DIR/bin 
+
+	header "Installing dependencies..."
+	apt-get update
+	apt-get -y install git-core gnupg flex bison gperf libsdl1.2-dev libesd0-dev libwxgtk2.8-dev \
+		squashfs-tools build-essential zip curl libncurses5-dev zlib1g-dev openjdk-6-jre openjdk-6-jdk \
+		pngcrush schedtool libxml2 libxml2-utils xsltproc g++-multilib lib32z1-dev lib32ncurses5-dev \
+		lib32readline-gplv2-dev gcc-multilib
+
+	curl -s https://dl-ssl.google.com/dl/googlesource/git-repo/repo > $DIR/bin/repo
+
+	header "Downloading latest Android SDK..."
+	cd $DIR
+	curl -s http://developer.android.com/sdk/index.html#download > /tmp/sdk.html
+	SDK_URL=$(grep adt-bundle-linux-x86_64 /tmp/sdk.html | cut -d"\"" -f2)
+	wget $SDK_URL
+	SDK_ZIP=$(echo ${SDK_URL##*/})
+	unzip -q $SDK_ZIP
+	SDK=$(echo $SDK_ZIP | cut -d"." -f1)
+	export PATH=$PATH:$SDK/sdk/platform-tools:$PATH:$SDK/sdk/tools:$DIR/bin
+
+	header "Initializing CyanogenMod repository..."
+	cd $DIR/system
+	repo init -u git://github.com/CyanogenMod/android.git -b cm-$CM_VERSION
+
+	exit 0
+}
+
+header "Checking for Android SDK..."
+echo $PATH | grep 'android-sdk' > /dev/null
+SDK_EXIST=$?
+if [ $SDK_EXIST -ne 0 ]
+then
+	echo "ERROR: Android SDK not found!"
+	echo
+	read -p "Do you want to configure the build environment? [N/y] " -n 1 -r
+	echo
+
+	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "Please check if you have Android SDK installed and if it's configured correctly. Also, check if it's in your \$PATH"
+		exit 1
+	else
+		configure_env
+	fi
+
+else
+	echo "Android SDK found."
+	echo
+fi
+
+header "Checking for new versions of Google Apps..."
+curl -s http://goo.im/gapps > /tmp/gapps.html
+GAPPS=$(grep -A2 "$CM_VERSION.x" /tmp/gapps.html | grep href | awk '{ print $3 }' | cut -d"=" -f2 | sed 's/"//g')
+GAPPS_ZIP=$(echo $GAPPS | cut -d"/" -f5)
+
+cd $DIR/gapps/
+if [ ! -f ./$GAPPS_ZIP ]
+then
+	echo "* New version found! *"
+	read -p "Do you want to download the new version of Google Apps? [Y/n] " -n 1 -r
+	echo
+
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		header "Downloading new version of Google Apps"
+		wget $GAPPS
+	fi
+else
+	echo "Newest version already installed."
+	echo
+fi
+
+header "Syncing CyanogenMod repository..."
+cd ~/android/system/
+repo sync
+
+cd ~/android/system/vendor/cm/
+./get-prebuilts
+
+echo "=================="
+read -p "Do you want to build CyanogenMod now? [Y/n] " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+	echo "Starting to build CyanogenMod 10.2..."
+	cd $DIR/system/
+	source build/envsetup.sh
+	breakfast maguro
+	brunch maguro
+	header "Build finished"
+	exit 0
+else
+	echo "Skipping build."
+	exit 0
+fi
