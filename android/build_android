@@ -7,15 +7,6 @@ USER=$(whoami)
 DIR="/home/$USER/android"
 CM_VERSION="10.2"
 
-header "Checking Linux distro..."
-DISTRO=$(cat /etc/issue)
-echo $DISTRO | grep -i debian > /dev/null
-if [ $? -ne 0 ]
-then
-	echo "Linux distro not supported!"
-	exit 1
-fi
-
 function header {
 	echo "=================="
 	echo "$*"
@@ -51,6 +42,15 @@ function configure_env {
 
 	exit 0
 }
+
+header "Checking Linux distro..."
+DISTRO=$(cat /etc/issue)
+echo $DISTRO | grep -i debian > /dev/null
+if [ $? -ne 0 ]
+then
+	echo "Linux distro not supported!"
+	exit 1
+fi
 
 header "Checking for Android SDK..."
 echo $PATH | grep 'android-sdk' > /dev/null
