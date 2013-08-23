@@ -50,13 +50,13 @@ function configure_env {
 }
 
 header "Checking Linux distro..."
-DISTRO=$(cat /etc/issue)
+DISTRO=$(cat /etc/issue | sed 's/\\l//g')
 echo $DISTRO | grep -i debian > /dev/null
 if [ $? -eq 0 ]
 then
-	echo $DISTRO
+	echo -e "$DISTRO"
 else
-	echo -e "Linux distro not supported! \n"
+	echo -e "Linux distro not supported!\n"
 	exit 1
 fi
 
