@@ -52,8 +52,10 @@ function configure_env {
 header "Checking Linux distro..."
 DISTRO=$(cat /etc/issue)
 echo $DISTRO | grep -i debian > /dev/null
-if [ $? -ne 0 ]
+if [ $? -eq 0 ]
 then
+	echo $DISTRO
+else
 	echo "Linux distro not supported!"
 	exit 1
 fi
@@ -70,8 +72,8 @@ then
 
 	if [[ ! $REPLY =~ ^[Yy]$ ]]
 	then
-		echo -e "Please check if you have Android SDK installed and if it's configured correctly.\n
-			Also, check if \$SDK/platform-tools is in your \$PATH"
+		echo -e "\nPlease check if you have Android SDK installed and if it's configured correctly.
+Also, check if \$SDK/platform-tools is in your \$PATH"
 		exit 1
 	else
 		configure_env
