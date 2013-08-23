@@ -37,6 +37,8 @@ function configure_env {
 	curl -s http://developer.android.com/sdk/index.html#download > /tmp/sdk.html
 	SDK_URL=$(grep adt-bundle-linux-x86_64 /tmp/sdk.html | cut -d"\"" -f2)
 	wget $SDK_URL
+
+	header "Uncompressing SDK..."
 	SDK_ZIP=$(echo ${SDK_URL##*/})
 	unzip -q $SDK_ZIP
 	SDK=$(echo $SDK_ZIP | cut -d"." -f1)
@@ -68,7 +70,8 @@ then
 
 	if [[ ! $REPLY =~ ^[Yy]$ ]]
 	then
-		echo "Please check if you have Android SDK installed and if it's configured correctly. Also, check if it's in your \$PATH"
+		echo -e "Please check if you have Android SDK installed and if it's configured correctly.\n
+			Also, check if \$SDK/platform-tools is in your \$PATH"
 		exit 1
 	else
 		configure_env
