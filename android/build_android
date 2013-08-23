@@ -67,8 +67,10 @@ if [ $SDK_EXIST -ne 0 ]
 then
 	echo "ERROR: Android SDK not found!"
 	echo
-	read -p "Do you want to configure the build environment? [N/y] " -n 1 -r
+	DFT_OPT="N"
+	read -p "Do you want to configure the build environment? [N/y] " -n 1 -r -i REPLY
 	echo
+	REPLY="${REPLY:-$DFT_OPT}"
 
 	if [[ ! $REPLY =~ ^[Yy]$ ]]
 	then
@@ -93,8 +95,10 @@ cd $DIR/gapps/
 if [ ! -f ./$GAPPS_ZIP ]
 then
 	echo "* New version found! *"
-	read -p "Do you want to download the new version of Google Apps? [Y/n] " -n 1 -r
+	DFT_OPT="Y"
+	read -p "Do you want to download the new version of Google Apps? [Y/n] " -n 1 -r -i REPLY
 	echo
+	REPLY="${REPLY:-$DFT_OPT}"
 
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
@@ -114,8 +118,10 @@ cd ~/android/system/vendor/cm/
 ./get-prebuilts
 
 echo "=================="
+DFT_OPT="Y"
 read -p "Do you want to build CyanogenMod now? [Y/n] " -n 1 -r
 echo
+REPLY="${REPLY:-$DFT_OPT}"
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
 	echo "Starting to build CyanogenMod 10.2..."
