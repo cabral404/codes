@@ -30,6 +30,7 @@ function configure_env {
 	fi
 
 	curl -s https://dl-ssl.google.com/dl/googlesource/git-repo/repo > $DIR/bin/repo
+	chmod +x $DIR/bin/repo
 
 	header "Downloading latest Android SDK..."
 	cd $DIR
