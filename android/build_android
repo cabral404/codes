@@ -63,7 +63,7 @@ else
 fi
 
 header "Checking for Android SDK..."
-echo $PATH | grep 'android-sdk' > /dev/null
+echo $PATH | grep 'android' | grep 'sdk' > /dev/null
 SDK_EXIST=$?
 if [ $SDK_EXIST -ne 0 ]
 then
