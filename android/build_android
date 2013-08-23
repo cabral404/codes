@@ -119,7 +119,7 @@ cd ~/android/system/vendor/cm/
 
 echo "=================="
 DFT_OPT="Y"
-read -p "Do you want to build CyanogenMod now? [Y/n] " -n 1 -r
+read -p "Do you want to build CyanogenMod now? [Y/n] " -n 1 -r -i REPLY
 echo
 REPLY="${REPLY:-$DFT_OPT}"
 if [[ ! $REPLY =~ ^[Yy]$ ]]
