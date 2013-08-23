@@ -128,7 +128,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	echo "Starting to build CyanogenMod 10.2..."
 	cd $DIR/system/
-	source build/envsetup.sh
+	source $DIR/system/build/envsetup.sh
 	breakfast maguro
 	croot
 	brunch maguro
