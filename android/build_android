@@ -162,8 +162,17 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	DATE=$(date +%Y%m%d)
 	adb push $DIR/system/out/target/product/maguro/cm-10.2-$DATE-UNOFFICIAL-maguro.zip /sdcard/
-else
-	exit 1
+fi
+
+echo "=================="
+DFT_OPT="Y"
+read -p "Do you want to push Google Apps to the device $DEV_ID now? [Y/n] " -n 1 -r REPLY
+echo
+REPLY="${REPLY:-$DFT_OPT}"
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	DATE=$(date +%Y%m%d)
+	adb push $DIR/gapps/$GAPPS /sdcard/
 fi
 
 exit 0
