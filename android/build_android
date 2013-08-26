@@ -134,8 +134,36 @@ then
 	croot
 	brunch maguro
 	header "Build finished"
-	exit 0
 else
 	echo "Skipping build."
 	exit 0
 fi
+
+header "Checking for devices..."
+DEV=$(adb devices -l | tail -1 | grep 'device')
+if [ $? -eq 0 ]
+then
+	echo
+	DEV_ID=$(echo $DEV | awk '{ print $1 }')
+	echo "Device $DEV_ID found."
+else
+	echo
+	echo "No suitable device found."
+	exit 1
+fi
+
+
+echo "=================="
+DFT_OPT="Y"
+read -p "Do you want to push CyanogenMod to the device $DEV_ID now? [Y/n] " -n 1 -r REPLY
+echo
+REPLY="${REPLY:-$DFT_OPT}"
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	DATE=$(date +%Y%m%d)
+	adb push $DIR/system/out/target/product/maguro/cm-10.2-$DATE-UNOFFICIAL-maguro.zip /sdcard/
+else
+	exit 1
+fi
+
+exit 0
