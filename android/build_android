@@ -140,15 +140,15 @@ else
 fi
 
 header "Checking for devices..."
-DEV=$(adb devices -l | tail -1 | grep 'device')
+DEV=$(adb devices -l | tail -2 | head -1 | grep 'device')
 if [ $? -eq 0 ]
 then
-	echo
 	DEV_ID=$(echo $DEV | awk '{ print $1 }')
 	echo "Device $DEV_ID found."
-else
 	echo
+else
 	echo "No suitable device found."
+	echo
 	exit 1
 fi
 
