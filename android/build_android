@@ -84,7 +84,6 @@ Also, check if \$SDK/platform-tools is in your \$PATH"
 
 else
 	echo "Android SDK found."
-	echo
 fi
 
 header "Checking for new version of repo..."
@@ -112,7 +111,6 @@ then
 	fi
 else
 	echo "Newest version already installed."
-	echo
 fi
 
 header "Syncing CyanogenMod repository..."
