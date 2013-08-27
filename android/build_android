@@ -148,7 +148,7 @@ then
 	cd $DIR/system/
 	source $DIR/system/build/envsetup.sh
 	breakfast maguro
-	if [ $PROP_FILES -eq 0 ]
+	if [ $PROP_FILES -eq 1 ]
 	then
 		cd $DIR/system/device/samsung/maguro
 		./extract-files.sh
@@ -185,6 +185,9 @@ then
 	then
 		DATE=$(date +%Y%m%d)
 		adb push $DIR/gapps/$GAPPS /sdcard/
+	else
+		echo "Push skipped."
+		echo "=================="
 	fi
 fi
 
