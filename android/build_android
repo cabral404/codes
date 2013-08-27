@@ -6,6 +6,7 @@ source ~/.bashrc
 INIT=0
 DIR="$HOME/android"
 CM_VERSION="10.2"
+NEW_GAPPS=0
 
 function header {
 	echo -e "\n=================="
@@ -108,6 +109,7 @@ then
 	then
 		header "Downloading new version of Google Apps"
 		wget $GAPPS
+		NEW_GAPPS=1
 	fi
 else
 	echo "Newest version already installed."
@@ -164,15 +166,18 @@ then
 	adb push $DIR/system/out/target/product/maguro/cm-10.2-$DATE-UNOFFICIAL-maguro.zip /sdcard/
 fi
 
-echo "=================="
-DFT_OPT="Y"
-read -p "Do you want to push Google Apps to the device $DEV_ID now? [Y/n] " -n 1 -r REPLY
-echo
-REPLY="${REPLY:-$DFT_OPT}"
-if [[ $REPLY =~ ^[Yy]$ ]]
+if [ $NEW_GAPPS -eq 1 ]
 then
-	DATE=$(date +%Y%m%d)
-	adb push $DIR/gapps/$GAPPS /sdcard/
+	echo "=================="
+	DFT_OPT="Y"
+	read -p "Do you want to push Google Apps to the device $DEV_ID now? [Y/n] " -n 1 -r REPLY
+	echo
+	REPLY="${REPLY:-$DFT_OPT}"
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		DATE=$(date +%Y%m%d)
+		adb push $DIR/gapps/$GAPPS /sdcard/
+	fi
 fi
 
 exit 0
