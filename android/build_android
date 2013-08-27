@@ -142,7 +142,7 @@ else
 fi
 
 header "Checking for devices..."
-DEV=$(adb devices -l | tail -2 | head -1 | grep 'device')
+DEV=$(adb devices -l | tail -2 | head -1 | grep 'device' | grep 'usb')
 if [ $? -eq 0 ]
 then
 	DEV_ID=$(echo $DEV | awk '{ print $1 }')
