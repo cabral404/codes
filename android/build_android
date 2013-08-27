@@ -122,6 +122,21 @@ repo sync
 cd ~/android/system/vendor/cm/
 ./get-prebuilts
 
+PROP_FILES=0
+header "Checking for devices..."
+DEV=$(adb devices -l | tail -2 | head -1 | grep 'device' | grep 'usb')
+if [ $? -eq 0 ]
+then
+	DEV_ID=$(echo $DEV | awk '{ print $1 }')
+	echo "Device $DEV_ID found."
+	echo
+	PROP_FILES=1
+else
+	echo "No suitable device found."
+	echo
+	exit 1
+fi
+
 echo "=================="
 DFT_OPT="Y"
 read -p "Do you want to build CyanogenMod now? [Y/n] " -n 1 -r REPLY
@@ -133,27 +148,20 @@ then
 	cd $DIR/system/
 	source $DIR/system/build/envsetup.sh
 	breakfast maguro
-	croot
-	brunch maguro
-	header "Build finished"
+	if [ $PROP_FILES -eq 0 ]
+	then
+		cd $DIR/system/device/samsung/maguro
+		./extract-files.sh
+		cd $DIR/system
+		. build/envsetup.sh
+		croot
+		brunch maguro
+		header "Build finished"
+	fi
 else
 	echo "Skipping build."
 	exit 0
 fi
-
-header "Checking for devices..."
-DEV=$(adb devices -l | tail -2 | head -1 | grep 'device' | grep 'usb')
-if [ $? -eq 0 ]
-then
-	DEV_ID=$(echo $DEV | awk '{ print $1 }')
-	echo "Device $DEV_ID found."
-	echo
-else
-	echo "No suitable device found."
-	echo
-	exit 1
-fi
-
 
 echo "=================="
 DFT_OPT="Y"
