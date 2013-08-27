@@ -5,8 +5,8 @@ source ~/.bashrc
 
 INIT=0
 DIR="$HOME/android"
-CM_VERSION="10.2"
 NEW_GAPPS=0
+CFG_FILE="$HOME/.build_android.cfg"
 
 function header {
 	echo -e "\n=================="
@@ -50,6 +50,18 @@ function configure_env {
 	cd $DIR/system
 	repo init -u git://github.com/CyanogenMod/android.git -b cm-$CM_VERSION
 }
+
+if [ -f $CFG_FILE ]
+then
+	source $CFG_FILE
+else
+	read -p "Which version of CyanogenMod do you want to build? (For the correct device name, please refer to http://wiki.cyanogenmod.org/w/Devices) " -r CM_VERSION
+	read -p "For which device are you building CyanogenMod? " -r DEVICE
+
+	echo -e "export CM_VERSION=\"$CM_VERSION\"" > $CFG_FILE
+	echo -e "export DEVICE=\"$DEVICE\"" >> $CFG_FILE
+	source $CFG_FILE
+fi
 
 header "Checking Linux distro..."
 DISTRO=$(cat /etc/issue | sed 's/\\l//g' | sed 's/\\n//g')
@@ -147,15 +159,15 @@ then
 	echo "Starting to build CyanogenMod 10.2..."
 	cd $DIR/system/
 	source $DIR/system/build/envsetup.sh
-	breakfast maguro
+	breakfast $DEVICE
 	if [ $PROP_FILES -eq 1 ]
 	then
-		cd $DIR/system/device/samsung/maguro
+		cd $DIR/system/device/samsung/$DEVICE
 		./extract-files.sh
 		cd $DIR/system
 		. build/envsetup.sh
 		croot
-		brunch maguro
+		brunch $DEVICE
 		header "Build finished"
 	fi
 else
@@ -171,7 +183,7 @@ REPLY="${REPLY:-$DFT_OPT}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	DATE=$(date +%Y%m%d)
-	adb push $DIR/system/out/target/product/maguro/cm-10.2-$DATE-UNOFFICIAL-maguro.zip /sdcard/
+	adb push $DIR/system/out/target/product/$DEVICE/cm-10.2-$DATE-UNOFFICIAL-$DEVICE.zip /sdcard/
 fi
 
 if [ $NEW_GAPPS -eq 1 ]
