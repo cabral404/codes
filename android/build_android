@@ -55,8 +55,8 @@ if [ -f $CFG_FILE ]
 then
 	source $CFG_FILE
 else
-	read -p "Which version of CyanogenMod do you want to build? (For the correct device name, please refer to http://wiki.cyanogenmod.org/w/Devices) " -r CM_VERSION
-	read -p "For which device are you building CyanogenMod? " -r DEVICE
+	read -p "Which version of CyanogenMod do you want to build? " -r CM_VERSION
+	read -p "For which device are you building CyanogenMod? (For the correct device name, please refer to http://wiki.cyanogenmod.org/w/Devices) " -r DEVICE
 
 	echo -e "export CM_VERSION=\"$CM_VERSION\"" > $CFG_FILE
 	echo -e "export DEVICE=\"$DEVICE\"" >> $CFG_FILE
